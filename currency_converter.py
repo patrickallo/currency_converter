@@ -1,5 +1,7 @@
 import urllib2
 from urllib import urlopen
+import requests
+import sys
 import json
 
 URL = 'http://finance.yahoo.com/d/quotes.csv?e=.csv&f=sl1d1t1&s={from_curr}{to_curr}=X'
@@ -7,12 +9,12 @@ YAHOO_CURRENCY_CONVERTER = 'http://finance.yahoo.com/connection/currency-convert
 
 
 def _get_data(url):
-    request = urllib2.Request(url, None, {'Accept-encoding': '*'})
     try:
-        response = urllib2.urlopen(request)
-    except urllib2.URLError:
+        request = requests.get(url)
+    except (requests.exceptions.ConnectionError) as err:
+        print("Could not connect: ", err)
         return None
-    result = response.read()
+    result = request.read()
     return result
 
 
